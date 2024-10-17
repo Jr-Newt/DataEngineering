@@ -1,9 +1,9 @@
 from azure.storage.blob import ContainerClient, BlobClient, BlobServiceClient
 
 #connection String
-connectionString = "DefaultEndpointsProtocol=https;AccountName=newtazurestoragedemo;AccountKey=YFK0hjsIKOCWv6oEPL9Wxq7mzU5cTP96bpFQrIKMwtXabmdzSpdCYl5a5Mhh1FAKtCtJbETbLPoM+AStPsYcwg==;EndpointSuffix=core.windows.net"
-accountKey = "YFK0hjsIKOCWv6oEPL9Wxq7mzU5cTP96bpFQrIKMwtXabmdzSpdCYl5a5Mhh1FAKtCtJbETbLPoM+AStPsYcwg=="
-accountName = "newtazurestoragedemo"
+connectionString = "BLOB_CONNECTION_STRING"
+accountKey = "BLOB_ACCOUNT_KEY"
+accountName = "BLOB_ACCOUNT_NAME"
 
 blobStorageClient = BlobServiceClient.from_connection_string(connectionString)
 print(blobStorageClient)

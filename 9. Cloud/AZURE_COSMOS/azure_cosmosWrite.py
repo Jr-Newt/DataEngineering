@@ -4,10 +4,10 @@ import json
 
 # setting up the connectivity
 
-endpoint = "https://azurecosmos-newt-demo1.documents.azure.com:443/"
-key = "sGr9RqXNZg0r3aFBG0JYUyS8QffNyLDJ9cWZ3ltKm7JQvH6hDPANaPQbREN7KbgndHdNHPAaZlcPACDbG6qBTg=="
-DATABASE_NAME = "customer-AzureDB"
-CONTAINER_NAME = "customerContainer"
+endpoint = ""
+key = ""
+DATABASE_NAME = ""
+CONTAINER_NAME = ""
 
 # Create a Cosmos client - to establish a connection with Azure CosmosDB
 client = CosmosClient(endpoint,key)

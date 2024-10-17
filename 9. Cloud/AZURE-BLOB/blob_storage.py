@@ -5,9 +5,9 @@ import os
 load_dotenv()
 
 #connection String
-connectionString = os.getenv("BLOB_CONNECTION_STRING")
-accountKey = os.getenv("BLOB_ACCOUNT_KEY")
-accountName = os.getenv("BLOB_ACCOUNT_NAME")
+connectionString = os.getenv("BLOBS_CONNECTION_STRING")
+accountKey = os.getenv("BLOBS_ACCOUNT_KEY")
+accountName = os.getenv("BLOBS_ACCOUNT_NAME")
 
 blobStorageClient = BlobServiceClient.from_connection_string(connectionString)
 print(blobStorageClient)
