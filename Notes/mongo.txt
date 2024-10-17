@@ -1,0 +1,175 @@
+use sales;
+
+> db.createCollection("products");
+
+> db.products.insertOne({"productid":1, "productname":"Laptop","category":"Electronics","price":79990})
+
+> db.products.insertMany([
+{"productid":2,"productname":"Smart Phone","category":"Accessories","price":34900},
+{"productid":3,"productname":"Camera","category":"Digital electronics","price":76000}])
+
+-- to show document using filter
+> db.products.find({"productid":2})
+
+-- to show document records with price > 50000   (&gt = greater than)
+> db.products.find({"price": {$gt : 50000}})
+
+-- to show document records with price < 50000   (&lt = greater than)
+> db.products.find({"price": {$lt : 50000}})
+
+-- to update one document in the table 
+> db.products.updateOne(
+{"category": "electronics"}, {$set :{"discount" : .10}})
+
+-- to update many documents
+db.products.updateMany(
+> {"category": "electronics"}, {$set :{"discount" : .10}})
+{"productid": 1}, {$set :{"discount" : .10}})
+
+-- delete one record
+> db.products.deleteOne(
+  {"productid": 1})
+
+-- deleting with condition
+> db.products.deleteMany(
+  {"price": {$gte : 50000}})
+
+
+-- to get the shape of the table
+> db.products.countDocuments()
+
+-- to drop table
+db.products.drop()
+
+-- to drop DB
+db.dropDatabase()
+
+-- to show restaurantid, name, borough, zipcode which is in address
+db.restaurant.find({},
+  {restaurant_id : 1, name : 1, borough : 1, "address.zipcode" : 1, _id: 0 })
+
+
+-- show all restuarant
+> db.restaurant.find(
+  {'grades.0.score':{$gt : 2}})
+
+
+
+-- to get the sum of all scores  -- unwind is used to deconstruct the array into an 
+                                    individual value so that aggregate operation can to done
+> db.restaurant.aggregate([
+  {$unwind : "$grades"},
+{"$group":{_id : "$_id", totalScore : {$sum : "$grades.score"}}}])
+
+-- to find score greater than 90
+> db.restaurant.find({
+"grades.score" : {$gt : 90}})
+
+--
+> db.restaurant.find({
+  "cuisine" : { $ne: "American " },
+  "grades.score": { $gt: 70 },
+  "address.coord.1": { $lt: 65.754168 }
+},
+{
+  name: 1,
+  cuisine: 1,
+  "grades.score": 1,
+  "address.coord": 1,
+  _id: 0
+}).pretty()
+
+
+-- find all the restaurants in Brooklyn with a Grade of 'B' or lower.
+> db.restaurant.find({
+"borough" : "Brooklyn",
+  "grades.grade" : { $nin : ['A']},"grades": {$ne : [] }}
+).pretty()
+
+--find restaurant with an average score below 30.
+
+> db.restaurant.aggregate([
+  {
+    $unwind: "$grades"
+  },
+  {$group : {
+      _id: "$restaurant_id",
+      name: { $first: "$name" },
+      averageScore: { $avg: "$grades.score" }
+    }},
+  {
+$match : {
+averageScore : {$lte : 10}
+}}
+]) 
+
+
+-- find all restaurants in "Brooklyn' brough that serve american online 
+-- and have a score less than 10 on any insepection.
+
+> db.restaurant.find({
+  "borough": "Brooklyn",
+  "cuisine": "American ",
+  "grades.score" : {$lt : 10}
+  })
+
+or
+
+> db.restaurant.find({
+"borough": "Brooklyn",
+"cuisine": "American ",
+grades : {$elemMatch:{score:{$lt: 10}}
+}})
+
+
+-- retrieve all restaurants that have a 'A' grade and sort them by 
+-- the most recent grade date in descending order
+
+> db.restaurant.find({
+"grades.grade" : "A"}).sort({"grades.date" : -1})
+
+
+--set limit on the rsponse to 10 on previous output
+
+> db.restaurant.find({
+"grades.grade" : "A"}).sort({"grades.date" : -1}).limit(10)
+
+-- for each borough Calculate and find aggregate methods -  find avg, mediam, minimum and maximum 
+-- grade score of restaurant sercving chinese cuisines
+
+> db.restaurant.aggregate([
+  {$match :{cuisine: "Chinese"}},
+  {$unwind :"$grades"},
+  {$group :{_id: "$borough", scores:{$push: "$grades.score"}}},
+   {$project:{_id:0, borough:"$_id",
+avgscore:{$avg:"$scores"},
+minscore:{$min:"$scores"},
+maxscore:{$max:"$scores"},
+medianscore: {$median: {input: "$scores", method:"approximate"}}
+}}
+])
+
+----------Indexing----------------
+-- Q) Create a compound index on borough and cuisine, the query restaurants
+	in "queens" serving "Jewish/Kosher" cuisine using this index
+
+--Optimaization of query using indexing
+> db.restaurant.createIndex({borough : 1, cuisine : 1})
+> db.restaurant.find({borough:"Queens", cusine:"Jewish/Kosher"})
+
+-- Optimization using partial Index Index for restaurants
+	> db.restaurant.createIndex({"grade.score":1},
+	  {partialExpression:{"grades.score": {$gt : 20}}})
+
+	db.restaurant.find({"grades.score": {$gt : 20}})
+
+
+
+
+
+
+
+
+
+
+

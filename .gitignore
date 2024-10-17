@@ -1,0 +1,11 @@
+**/zomato_restaurants.csv
+**/zomato_restaurants.zip
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# VS Code settings
+.vscode/
+
+**/Hadoop Cluster.zip
